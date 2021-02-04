@@ -1,0 +1,433 @@
+
+
+////////////////////////// React Library ////////////////////
+
+
+import AvatarEditor from 'react-avatar-editor';
+
+
+
+////////////////////////// States ////////////////////
+
+
+states={
+    userProfilePic: '',
+    editor: null,
+    scaleValue: 1,
+    imageSelectionStatus: false,
+    imgFileName:""
+}
+
+
+
+
+////////////////////////// Functions ////////////////////
+
+
+	handleImageUserChange = (e) => {
+			
+
+		if(e.target.files[0].name !== null)
+		{
+
+			if (
+				e.target.files[0].name
+					.split(".")
+					.pop()
+					.match(/(jpg|jpeg|png)$/)
+			  ) {
+					
+				if (e.target.files && e.target.files[0]) {
+					var file = e.target.files[0];
+					var img = document.createElement("img");
+					this.state.backgroundImageFile = e.target.files[0];
+					
+					img.onload = () => {
+							
+							this.setState({
+	
+								imagePreview: URL.createObjectURL(file),
+								openCropper: true, 
+								selectedImage: file,
+								fileUploadErrors: [] ,
+								imageSelectionStatus: true,
+								imgFileName: file.name
+							});
+							this.setState({ errors: { } });
+
+					  };
+				  
+				  
+					var reader = new FileReader();
+					  reader.onloadend = function (ended) {
+					  img.src = ended.target.result;
+					}
+				  reader.readAsDataURL(e.target.files[0]);
+				  }
+
+			} else 
+			{
+				this.setState({
+					data: {
+						...this.state.data,
+						image: null,
+					},
+					imagePreview: "",
+				});
+				this.setState({ errors: { image: "The file type ." + e.target.files[0].name.split(".").pop() + " is not supported" } });
+			}
+
+
+
+		}
+
+
+		// if(e.target.files[0].name !== null)
+		// {
+
+		// 	if (
+		// 		e.target.files[0].name
+		// 			.split(".")
+		// 			.pop()
+		// 			.match(/(jpg|jpeg|png)$/)
+		// 	  ) {
+					
+		// 		if (e.target.files && e.target.files[0]) {
+		// 			var file = e.target.files[0];
+		// 			var img = document.createElement("img");
+		// 			this.state.backgroundImageFile = e.target.files[0];
+					
+		// 			img.onload = () => {
+						
+		// 				if(img.width == this.state.profileImgWidth && img.height == this.state.profileImgHeight)
+		// 				{
+		// 					this.setState({
+		// 						data: {
+		// 							...this.state.data,
+		// 							image: file,
+		// 						},
+		// 						imagePreview: URL.createObjectURL(file),
+		// 					});
+		// 					this.setState({ errors: { } });
+		// 				}else{
+						
+						
+		// 					this.setState({
+		// 						data: {
+		// 							...this.state.data,
+		// 							image: null,
+		// 						},
+		// 						imagePreview: "",
+		// 					});
+		// 				  this.setState({ errors: { image: "The file size must be width x height :"+this.state.profileImgWidth + " x "+this.state.profileImgHeight} });
+		// 				}
+		// 			  };
+				  
+				  
+		// 			var reader = new FileReader();
+		// 			  reader.onloadend = function (ended) {
+		// 			  img.src = ended.target.result;
+		// 			}
+		// 		  reader.readAsDataURL(e.target.files[0]);
+		// 		  }
+
+		// 	} else 
+		// 	{
+		// 		this.setState({
+		// 			data: {
+		// 				...this.state.data,
+		// 				image: null,
+		// 			},
+		// 			imagePreview: "",
+		// 		});
+		// 		this.setState({ errors: { image: "The file type ." + e.target.files[0].name.split(".").pop() + " is not supported" } });
+		// 	}
+
+
+
+		// }
+
+	};
+
+
+
+
+
+
+
+	setEditorRef = editor => this.setState({ editor });
+
+    onCrop = (e) => {
+		e.preventDefault();
+		const { editor } = this.state;
+		if (editor !== null) {
+		const url = editor.getImageScaledToCanvas().toDataURL();
+		const imgfile = this.DataURLtoFile(url,this.state.imgFileName)
+		this.setState({ 
+			
+			userProfilePic: url,
+			data: {
+				...this.state.data,
+				image: imgfile,
+			},
+
+		});
+
+
+
+		}
+
+		
+
+	};
+
+	onScaleChange = (scaleChangeEvent) => {
+		const scaleValue =  parseFloat(scaleChangeEvent.target.value);
+		this.setState({ scaleValue });
+	};
+
+	DataURLtoFile = (dataurl, filename) => {
+	let arr = dataurl.split(','),
+		mime = arr[0].match(/:(.*?);/)[1],
+		bstr = atob(arr[1]),
+		n = bstr.length,
+		u8arr = new Uint8Array(n);
+	while (n--) {
+		u8arr[n] = bstr.charCodeAt(n);
+	}
+	return new File([u8arr], filename, { type: mime });
+	};
+
+
+
+
+////////////////////////////////  Edit Data ////////////////////////
+
+
+
+
+									<div className='addBtnArea text-center'>
+										
+									{(this.state.imageSelectionStatus == true)?
+													
+													
+												<div style={{width:"95%", padding:"10px", border: "3px dashed #1B1D32",  marginRight: "20px", marginLeft: "20px", display: "flex", justifyContent: "center", alignItems: "center", 
+												alignContent: "center", alignSelf:"center"}}>
+													{/* <ImageCrop
+													imageSrc={this.state.selectedImage}
+													setEditorRef={this.setEditorRef}
+													onCrop={this.onCrop}
+													scaleValue={this.state.scaleValue}
+													onScaleChange={this.onScaleChange}
+													width={200}
+													height={200}
+													/> */}
+
+													<div className="row">
+
+														<div className="col-lg-6">
+															<AvatarEditor image={this.state.selectedImage} border = {30} width={200} height={200} scale={this.state.scaleValue} rotate={0} ref={this.setEditorRef} className="cropCanvas" />
+															<input style={{ width: '100%', backgroundColor: "#1B1D32" }} type="range" value={this.state.scaleValue} name="points" min="1" max="10" onChange={this.onScaleChange} className="multi-range" />
+
+														</div>
+
+														<div className="col-lg-6" >
+															
+															<div className="row" style={{display: "flex", justifyContent: "center", alignItems: "center", alignContent: "center", alignSelf:"center"}}>
+															{(this.state.userProfilePic === undefined || this.state.userProfilePic === "null" || this.state.userProfilePic === "") ? (
+																	<img src={UserAvatar} style={{ width: "150px", height: "150px", borderRadius: "50%"}}  />
+																	) : (
+																		<img src={this.state.userProfilePic} style={{ width: "150px", height: "150px", borderRadius: "50%"}} onError={(e)=>{e.target.src=UserAvatar}}/>
+																	)
+																}
+
+																<input
+																	type='file'
+																	className='form-control'
+																	name="profilePicBtn"
+																	style={{ display: "none" }}
+																	ref={(fileInput) => (this.fileInput = fileInput)}
+																	onChange={this.handleImageUserChange}
+																/>
+														
+																<button type='button' className='btn btnAdd' onClick={() => this.fileInput.click()}>
+																	<img src={AddIcon} alt='' />
+																</button>
+
+																			
+
+															</div>
+															
+															<div className="row">
+
+																<br/>
+
+																<button onClick={this.onCrop} className="editorOverlayCloseBtn  btn btn-dark">
+																	Capture
+																</button>
+
+															</div>
+																																						
+													
+
+														</div>
+
+
+													</div>
+
+
+
+													<br/>
+												</div>
+											
+
+											
+											: ""}
+
+
+											{(this.state.imageSelectionStatus == false)? 
+												
+												<div>
+													
+													{(imagePreview === undefined || imagePreview === "null" || imagePreview === "") ? (
+														<img src={UserAvatar} style={{ width: "150px", height: "150px", borderRadius: "50%"}}  />
+														) : (
+															<img src={this.state.userProfilePic} style={{ width: "150px", height: "150px", borderRadius: "50%"}} onError={(e)=>{e.target.src=UserAvatar}}/>
+														)
+													}
+
+												<input
+													type='file'
+													className='form-control'
+													name="profilePicBtn"
+													style={{ display: "none" }}
+													ref={(fileInput) => (this.fileInput = fileInput)}
+													onChange={this.handleImageUserChange}
+												/>
+										
+												<button type='button' className='btn btnAdd' onClick={() => this.fileInput.click()}>
+													<img src={AddIcon} alt='' />
+												</button>
+
+												</div> : "" }
+
+									
+
+									</div>
+
+
+
+
+///////////////// Add User /////////////////////////////////
+
+
+
+
+
+											<div className='addBtnArea text-center'>
+												
+												{(this.state.imageSelectionStatus == true)?
+													
+													
+														<div style={{width:"95%", padding:"10px", border: "3px dashed #1B1D32",  marginRight: "20px", marginLeft: "20px", display: "flex", justifyContent: "center", alignItems: "center", 
+														alignContent: "center", alignSelf:"center"}}>
+															{/* <ImageCrop
+															imageSrc={this.state.selectedImage}
+															setEditorRef={this.setEditorRef}
+															onCrop={this.onCrop}
+															scaleValue={this.state.scaleValue}
+															onScaleChange={this.onScaleChange}
+															width={200}
+															height={200}
+															/> */}
+
+															<div className="row">
+
+																<div className="col-lg-6">
+																	<AvatarEditor image={this.state.selectedImage} border = {30} width={200} height={200} scale={this.state.scaleValue} rotate={0} ref={this.setEditorRef} className="cropCanvas" />
+																	<input style={{ width: '100%', backgroundColor: "#1B1D32" }} type="range" value={this.state.scaleValue} name="points" min="1" max="10" onChange={this.onScaleChange} className="multi-range" />
+
+																</div>
+
+																<div className="col-lg-6" >
+																	
+																	<div className="row" style={{display: "flex", justifyContent: "center", alignItems: "center", alignContent: "center", alignSelf:"center"}}>
+																	{(this.state.userProfilePic === undefined || this.state.userProfilePic === "null" || this.state.userProfilePic === "") ? (
+																			<img src={UserAvatar} style={{ width: "150px", height: "150px", borderRadius: "50%"}}  />
+																			) : (
+																				<img src={this.state.userProfilePic} style={{ width: "150px", height: "150px", borderRadius: "50%"}} onError={(e)=>{e.target.src=UserAvatar}}/>
+																			)
+																		}
+
+																		<input
+																			type='file'
+																			className='form-control'
+																			name="profilePicBtn"
+																			style={{ display: "none" }}
+																			ref={(fileInput) => (this.fileInput = fileInput)}
+																			onChange={this.handleImageUserChange}
+																		/>
+																
+																		<button type='button' className='btn btnAdd' onClick={() => this.fileInput.click()}>
+																			<img src={AddIcon} alt='' />
+																		</button>
+
+																					
+
+																	</div>
+																	
+																	<div className="row">
+
+																		<br/>
+
+																		<button onClick={this.onCrop} className="editorOverlayCloseBtn  btn btn-dark">
+																			Capture
+																		</button>
+
+																	</div>
+																																								
+															
+
+																</div>
+
+
+															</div>
+
+
+
+															<br/>
+														</div>
+													
+
+												
+												: ""}
+
+
+											{(this.state.imageSelectionStatus == false)? 
+											
+												<div>
+													
+													{(imagePreview === undefined || imagePreview === "null" || imagePreview === "") ? (
+														<img src={UserAvatar} style={{ width: "150px", height: "150px", borderRadius: "50%"}}  />
+														) : (
+															<img src={this.state.userProfilePic} style={{ width: "150px", height: "150px", borderRadius: "50%"}} onError={(e)=>{e.target.src=UserAvatar}}/>
+														)
+													}
+
+												<input
+													type='file'
+													className='form-control'
+													name="profilePicBtn"
+													style={{ display: "none" }}
+													ref={(fileInput) => (this.fileInput = fileInput)}
+													onChange={this.handleImageUserChange}
+												/>
+										
+												<button type='button' className='btn btnAdd' onClick={() => this.fileInput.click()}>
+													<img src={AddIcon} alt='' />
+												</button>
+
+												</div> : "" }
+
+											</div>
+										
