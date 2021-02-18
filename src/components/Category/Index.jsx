@@ -244,10 +244,10 @@ class Category extends Component {
 													<td>{i + 1}</td>
 													<td>
 
-													{(category.image === undefined || category.image === "null") ? (
+													{(category.imageURL === undefined || category.imageURL === "null") ? (
 															<Image src={avatar} style={{ width: "50px",borderRadius:"50%" }} roundedCircle />
 														) : (
-															<Image src={`${config.IMG_URL}/image/${category.image}`} style={{ width: "50px",borderRadius:"50%" }} roundedCircle onError={(e)=>{e.target.src=avatar}}/>
+															<Image src={category.imageURL} style={{ width: "50px",borderRadius:"50%" }} roundedCircle onError={(e)=>{e.target.src=avatar}}/>
 														)
 													}
 

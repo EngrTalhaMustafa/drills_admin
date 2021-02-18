@@ -244,11 +244,11 @@ class Drill extends Component {
 														
 													<Link to={`drills/videos/${drills._id}`}>
 													
-														{(drills.thumbnail === undefined || drills.thumbnail === "null") ? (
+														{(drills.thumbnailURL === undefined || drills.thumbnailURL === "null") ? (
 																<Image src={avatar} width='150px' heigth='150px' />
 																
 															) : (
-																<Image src={`${config.IMG_URL}/image/drills/${drills.thumbnail}`} width='150px' heigth='150px' onError={(e)=>{e.target.src=avatar}}/>
+																<Image src={drills.thumbnailURL} width='150px' heigth='150px' onError={(e)=>{e.target.src=avatar}}/>
 															)
 														}
 				

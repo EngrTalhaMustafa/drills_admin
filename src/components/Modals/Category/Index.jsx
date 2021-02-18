@@ -9,6 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import AvatarEditor from 'react-avatar-editor';
+import Uploader from '../../../services/uploader';
 
 class CategoryModal extends Form {
 	state = {
@@ -122,13 +123,13 @@ class CategoryModal extends Form {
 					},
 				})
 				.then((response) => {
-					if (response.data.data.category.image) {
+					if (response.data.data.category.imageURL) {
 						this.setState({
 							data: {
 								name: response.data.data.category.name,
-								image: response.data.data.category.image,
+								image: response.data.data.category.imageURL,
 							},
-							imagePreview: `${config.IMG_URL}/image/${response.data.data.category.image}`,
+							imagePreview: response.data.data.category.imageURL,
 						});
 					} else {
 						this.setState({
@@ -147,9 +148,10 @@ class CategoryModal extends Form {
 		let message = "";
 		if (this.props.selection === "edit") {
 			if (this.state.data.image !== undefined) {
+				let imageData = await Uploader({ file: this.state.data.image, name: this.state.imgFileName, path: 'categories/images' });
 				const formdata = new FormData();
 				formdata.append("name", this.state.data.name);
-				formdata.append("image", this.state.data.image);
+				formdata.append("imageURL", imageData.url);
 				await axios(`${config.API_URL}/admin/categories/${this.props.id}`, {
 					method: "POST",
 					headers: {
@@ -181,9 +183,10 @@ class CategoryModal extends Form {
 			message = "Category has been added successfully";
 		} else if (this.props.selection === "add") {
 			if (this.state.data.image !== undefined) {
+				let imageData = await Uploader({ file: this.state.data.image, name: this.state.imgFileName, path: 'categories/images' });
 				const formdata = new FormData();
 				formdata.append("name", this.state.data.name);
-				formdata.append("image", this.state.data.image);
+				formdata.append("imageURL", imageData.url);
 				await axios(`${config.API_URL}/admin/categories`, {
 					method: "POST",
 					headers: {
@@ -381,10 +384,10 @@ class CategoryModal extends Form {
 													
 													<div>
 														
-														{(this.state.userProfilePic === undefined || this.state.userProfilePic === "null" || this.state.userProfilePic === "") ? (
+														{(this.state.imagePreview === undefined || this.state.imagePreview === "null" || this.state.imagePreview === "") ? (
 															<img src={CategoryIcon} style={{ width: "150px", height: "150px", borderRadius: "50%"}}  />
 															) : (
-																<img src={this.state.userProfilePic} style={{ width: "150px", height: "150px", borderRadius: "50%"}} onError={(e)=>{e.target.src=CategoryIcon}}/>
+																<img src={this.state.imagePreview} style={{ width: "150px", height: "150px", borderRadius: "50%"}} onError={(e)=>{e.target.src=CategoryIcon}}/>
 															)
 														}
 	

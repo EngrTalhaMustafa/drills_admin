@@ -228,7 +228,7 @@ class Playlist extends Component {
 										<tr>
 											<th>Id</th>
 											<th>Name</th>
-											<th>Thumbnail</th>
+											<th>ThumbnailURL</th>
 											<th>Drills Count</th>
 											<th>Action</th>
 										</tr>
@@ -241,10 +241,10 @@ class Playlist extends Component {
 													<td>{i + 1}</td>
 													<td>{playlist.name}</td>
 													<td>
-														{(playlist.thumbnail === undefined || playlist.thumbnail === "null") ? (
+														{(playlist.thumbnailURL === undefined || playlist.thumbnailURL === "null") ? (
 															<Image src={avatar} style={{ width: "50px"}} roundedCircle />
 														) : (
-															<Image src={`${config.IMG_URL}/image/playlist/${playlist.thumbnail}`} style={{ width: "50px"}}  onError={(e)=>{e.target.src=avatar}}/>
+															<Image src={playlist.thumbnailURL} style={{ width: "50px"}}  onError={(e)=>{e.target.src=avatar}}/>
 														)
 														}
 													</td>

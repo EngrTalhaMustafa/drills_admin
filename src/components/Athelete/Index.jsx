@@ -247,10 +247,10 @@ class Athelete extends Component {
 												<tr key={i}>
 													<td>{i + 1}</td>
 													<td>
-													{(athelete.image === undefined || athelete.image === "null") ? (
+													{(athelete.imageURL === undefined || athelete.imageURL === "null") ? (
 															<Image src={avatar} style={{ width: "50px",borderRadius:"50%" }} roundedCircle />
 														) : (
-															<Image src={`${config.IMG_URL}/image/${athelete.image}`} style={{ width: "50px",borderRadius:"50%" }} roundedCircle onError={(e)=>{e.target.src=avatar}}/>
+															<Image src={athelete.imageURL} style={{ width: "50px",borderRadius:"50%" }} roundedCircle onError={(e)=>{e.target.src=avatar}}/>
 														)
 														}
 													</td>

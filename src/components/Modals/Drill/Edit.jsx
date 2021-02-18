@@ -88,7 +88,7 @@ class EditDrillModal extends Form {
 				if (responses[3].status === 200) {
 					data = {
 						name: responses[3].data.data.drills[0].name,
-						thumbnail: responses[3].data.data.drills[0].thumbnail,
+						thumbnailURL: responses[3].data.data.drills[0].thumbnailURL,
 						categoryId: responses[3].data.data.drills[0].category._id,
 						athleteId: responses[3].data.data.drills[0].athlete._id,
 						difficultyLevelId: responses[3].data.data.drills[0].difficultyLevel._id,
@@ -376,10 +376,10 @@ class EditDrillModal extends Form {
 													
 													<div>
 														
-															{(data.thumbnail === undefined || data.thumbnail === "null" || data.thumbnail === "") ? (
+															{(data.thumbnailURL === undefined || data.thumbnailURL === "null" || data.thumbnailURL === "") ? (
 																<img src={uploadIcon} style={{ width: "700px", height: "350px"}}  draggable={false}/>
 																) : (
-																	<img src={`${config.IMG_URL}/image/drills/${data.thumbnail}`} style={{ wwidth: "700px", height: "350px"}} onError={(e)=>{e.target.src=uploadIcon}} draggable={false}/>
+																	<img src={data.thumbnailURL} style={{ wwidth: "700px", height: "350px"}} onError={(e)=>{e.target.src=uploadIcon}} draggable={false}/>
 																)
 															}
 		
@@ -506,10 +506,10 @@ class EditDrillModal extends Form {
 											<div className='col-md-12'>
 												<div className='form-group text-center'>
 
-													{(data.thumbnail === undefined || data.thumbnail === "null") ? (
+													{(data.thumbnailURL === undefined || data.thumbnailURL === "null") ? (
 															<img src={uploadIcon} style={{ width:'700px', height:'350px', borderRadius: "5px"}}  />
 														) : (
-															<img src={`${config.IMG_URL}/image/drills/${data.thumbnail}`} style={{ width:'700px', height:'350px', borderRadius: "5px"}}  onError={(e)=>{e.target.src=uploadIcon}}/>
+															<img src={data.thumbnailURL} style={{ width:'700px', height:'350px', borderRadius: "5px"}}  onError={(e)=>{e.target.src=uploadIcon}}/>
 														)
 													}
 

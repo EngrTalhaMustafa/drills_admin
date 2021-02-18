@@ -55,7 +55,7 @@ class DrillVideo extends Component {
 			category: drill[0].category._id,
 			difficultyLevel: drill[0].difficultyLevel._id,
 			isPremium: drill[0].isPremium,
-			thumbnail: drill[0].thumbnail,
+			thumbnailURL: drill[0].thumbnailURL,
 			videos: [...drill[0].videos, videoObject],
 		};
 

@@ -174,10 +174,10 @@ class Users extends Component {
 												<tr>
 													<td>{i + 1}</td>
 													<td>
-														{(user.image === undefined || user.image === "null") ? (
+														{(user.imageURL === undefined || user.imageURL === "null") ? (
 															<Image src={avatar} style={{ width: "50px",borderRadius:"50%" }} roundedCircle />
 														) : (
-															<Image src={`${config.IMG_URL}/image/${user.image}`} style={{ width: "50px",borderRadius:"50%" }} roundedCircle onError={(e)=>{e.target.src=avatar}}/>
+															<Image src={user.imageURL} style={{ width: "50px",borderRadius:"50%" }} roundedCircle onError={(e)=>{e.target.src=avatar}}/>
 														)
 														}
 													</td>

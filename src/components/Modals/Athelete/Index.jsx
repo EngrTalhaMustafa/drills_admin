@@ -8,6 +8,7 @@ import config from "../../../config";
 import axios from "axios";
 import { toast } from "react-toastify";
 import AvatarEditor from 'react-avatar-editor';
+import Uploader from '../../../services/uploader';
 
 class AtheleteModal extends Form {
 	state = {
@@ -113,13 +114,13 @@ class AtheleteModal extends Form {
 					},
 				})
 				.then((response) => {
-					if (response.data.data.athlete.image) {
+					if (response.data.data.athlete.imageURL) {
 						this.setState({
 							data: {
 								name: response.data.data.athlete.name,
-								image: response.data.data.athlete.image,
+								image: response.data.data.athlete.imageURL,
 							},
-							imagePreview: `${config.IMG_URL}/image/${response.data.data.athlete.image}`,
+							imagePreview: response.data.data.athlete.imageURL,
 						});
 					} else {
 						this.setState({
@@ -138,9 +139,10 @@ class AtheleteModal extends Form {
 		let message = "";
 		if (this.props.selection === "edit") {
 			if (this.state.data.image !== undefined) {
+				let imageData = await Uploader({ file: this.state.data.image, name: this.state.imgFileName, path: 'atheletes/images' });
 				const formdata = new FormData();
 				formdata.append("name", this.state.data.name);
-				formdata.append("image", this.state.data.image);
+				formdata.append("imageURL", imageData.url);
 				await axios(`${config.API_URL}/admin/athlete/${this.props.id}`, {
 					method: "POST",
 					headers: {
@@ -172,9 +174,10 @@ class AtheleteModal extends Form {
 			message = "Athlete has been edit successfully";
 		} else if (this.props.selection === "add") {
 			if (this.state.data.image !== undefined) {
+				let imageData = await Uploader({ file: this.state.data.image, name: this.state.imgFileName, path: 'atheletes/images' });
 				const formdata = new FormData();
 				formdata.append("name", this.state.data.name);
-				formdata.append("image", this.state.data.image);
+				formdata.append("imageURL", imageData.url);
 				await axios(`${config.API_URL}/admin/athlete`, {
 					method: "POST",
 					headers: {
@@ -393,10 +396,10 @@ class AtheleteModal extends Form {
 												
 												<div>
 													
-													{(this.state.userProfilePic === undefined || this.state.userProfilePic === "null" || this.state.userProfilePic === "") ? (
+													{(this.state.imagePreview === undefined || this.state.imagePreview === "null" || this.state.imagePreview === "") ? (
 														<img src={AthleteIcon} style={{ width: "150px", height: "150px", borderRadius: "50%"}}  />
 														) : (
-															<img src={this.state.userProfilePic} style={{ width: "150px", height: "150px", borderRadius: "50%"}} onError={(e)=>{e.target.src=AthleteIcon}}/>
+															<img src={this.state.imagePreview} style={{ width: "150px", height: "150px", borderRadius: "50%"}} onError={(e)=>{e.target.src=AthleteIcon}}/>
 														)
 													}
 
