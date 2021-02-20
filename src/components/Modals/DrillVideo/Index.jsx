@@ -200,7 +200,7 @@ class DrillVideoModal extends Form {
 		//upload image
 
 		const { thumbnail, video } = this.state.data;
-		let imageData = await Uploader({ file: thumbnail, name: this.state.imgFileName, path: 'drills/videos/thumbnails/images' });
+		let imageData = await Uploader({ file: thumbnail, name: thumbnail.filename, path: 'drills/videos/thumbnails/images' });
 		let thumbnailFormData = new FormData();
 		thumbnailFormData.append("thumbnail", imageData.url);
 		Axios.post(`${config.API_URL}/admin/drills/upload`, thumbnailFormData, {
@@ -209,9 +209,8 @@ class DrillVideoModal extends Form {
 				"Content-Type": "multipart/form-data",
 			},
 		}).then( async (response) => {
-			alert(1)
 			//upload video
-			let videoData = await Uploader({ file: video, name: 'abc.mp4', path: 'drills/videos/video-files', ref: this });
+			let videoData = await Uploader({ file: video, name: video.filename, path: 'drills/videos/video-files', ref: this });
 			let videoFormData = new FormData();
 			videoFormData.append("video", videoData.url);
 			Axios.post(`${config.API_URL}/admin/drills/upload`, videoFormData, {
